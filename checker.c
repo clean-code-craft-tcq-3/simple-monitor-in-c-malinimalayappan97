@@ -4,17 +4,11 @@ int TempAlerter = 0;
 int SOCAlerter = 0;
 int ChargeRateAlerter = 0;
 
-void batteryIsOk(float temperature, float soc, float chargeRate) 
-{
-    CheckIfTempExceedsRange(temperature);
-    CheckIfSOCExceedsRange(soc);
-    CheckIfChargeRateExceedsRange(chargeRate);
-}
-  void CheckIfTempExceedsRange(float temperature)
+ void CheckIfTempExceedsRange(float temperature)
   {
       if(temperature < 0 || temperature > 45)
       {
-          printf("Temperature out of range!\n");
+          printf("%fTemperature out of range!\n",temperature);
           TempAlerter = TempAlerter+1;
       }
   }
@@ -23,7 +17,7 @@ void batteryIsOk(float temperature, float soc, float chargeRate)
   {
       if(soc < 20 || soc > 80)
       {
-          printf("State of Charge out of range!\n");
+          printf("%fState of Charge out of range!\n",soc);
           SOCAlerter = SOCAlerter+1;
       }
   }
@@ -32,10 +26,18 @@ void batteryIsOk(float temperature, float soc, float chargeRate)
   {
       if(chargeRate > 0.8)
       {
-          printf("Charge Rate out of range!\n");
+          printf("%fCharge Rate out of range!\n",chargeRate);
           ChargeRateAlerter = ChargeRateAlerter+1;
       }
   }
+
+void batteryIsOk(float temperature, float soc, float chargeRate) 
+{
+    CheckIfTempExceedsRange(temperature);
+    CheckIfSOCExceedsRange(soc);
+    CheckIfChargeRateExceedsRange(chargeRate);
+}
+ 
  
 
 int main() {
