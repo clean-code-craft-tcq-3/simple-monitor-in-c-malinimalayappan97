@@ -1,3 +1,6 @@
+#include <stdio.h>
+#include <assert.h>
+int TempAlerter = 0;
 int SOCAlerter = 0;
 int ChargeRateAlerter = 0;
 
