@@ -54,71 +54,41 @@ BMS_s BatteryCheck_s ={
     0
 };
 
- TempRange_e CheckTempRange(float temperature)
+ _Bool CheckTempInRange(float temperature)
   {
-      if(temperature < 0 )
+      if(temperature < 2.25 || temperature > 42.75)
       {
-          BatteryCheck_s.TempRange = LOW_Temp_BREACH;
-      }
-      else if(temperature >= 0 && temperature < 2.25)
-      {
-          BatteryCheck_s.TempRange = LOW_Temp_WARNING;
-      }
-      else if(temperature >= 2.25 && temperature < 42.75)
-      {
-          BatteryCheck_s.TempRange = Temp_NORMAL;
-      }
-      else if(temperature >= 4.75 && temperature < 45)
-      {
-          BatteryCheck_s.TempRange = HIGH_Temp_WARNING;
+          return 0;
       }
       else
       {
-          BatteryCheck_s.TempRange = HIGH_Temp_BREACH;
+        return 1;  
       }
-      return BatteryCheck_s.TempRange;
   }
   
-  SOCRange_e CheckSocRange(float soc)
+  _Bool CheckSocInRange(float soc)
   {
-      if(soc < 20 )
+      if(soc < 24 || soc > 76)
       {
-          BatteryCheck_s.SOCRange = LOW_SOC_BREACH;
-      }
-      else if(soc >= 20 && soc < 24)
-      {
-          BatteryCheck_s.SOCRange = LOW_SOC_WARNING;
-      }
-      else if(soc >= 24 && soc < 76)
-      {
-          BatteryCheck_s.SOCRange = SOC_NORMAL;
-      }
-      else if(soc >= 76 && soc < 80)
-      {
-          BatteryCheck_s.SOCRange = HIGH_SOC_WARNING;
+          return 0;
       }
       else
       {
-          BatteryCheck_s.SOCRange = HIGH_SOC_BREACH;
+        return 1;  
       }
-      return BatteryCheck_s.SOCRange;
+      
   }
 
-ChargeRateRange_e CheckChargeRateRange(float chargeRate)
+_Bool CheckChargeRateInRange(float chargeRate)
   {
-      if(chargeRate > 0.8 )
+      if(chargeRate > 0.76)
       {
-          BatteryCheck_s.ChargeRateRange = ChargeRate_BREACH;
-      }
-      else if(chargeRate <=0.8 && chargeRate >= 0.76)
-      {
-          BatteryCheck_s.ChargeRateRange = ChargeRate_WARNING;
+          return 0;
       }
       else
       {
-          BatteryCheck_s.ChargeRateRange = ChargeRate_NORMAL;
+        return 1;  
       }
-      return BatteryCheck_s.ChargeRateRange;
   }
   
   void TempAlerter(void)
@@ -164,7 +134,7 @@ ChargeRateRange_e CheckChargeRateRange(float chargeRate)
   }
   void BatteryTempIsOk(float temperature)
   {
-     if(CheckTempRange(temperature) != Temp_NORMAL)
+     if(CheckTempInRange(temperature) != 1)
      {
        TempAlerter();
      } 
@@ -172,7 +142,7 @@ ChargeRateRange_e CheckChargeRateRange(float chargeRate)
   
   void BatterySOCIsOk(float soc)
   {
-     if(CheckSocRange(soc) != SOC_NORMAL)
+     if(CheckSocInRange(soc) != 1)
      {
         SOCAlerter();
      } 
@@ -180,7 +150,7 @@ ChargeRateRange_e CheckChargeRateRange(float chargeRate)
   
   void BatteryChargeRateIsOk(float chargeRate)
   {
-     if(CheckChargeRateRange(chargeRate) != ChargeRate_NORMAL)
+     if(CheckChargeRateInRange(chargeRate) != 1)
      {
         ChargeRateAlerter();
      }
