@@ -14,8 +14,8 @@ typedef struct
 BMS_s BatteryCheck_s ={0, 0,0,0,0,0};
    _Bool CheckTempInWarningRange(float temperature)
   {
-      if((0<= temperature <=2.25) ||
-            (42.75<= temperature <=45))
+      if(((0<= temperature) &&(temperature <=2.25)) ||
+            ((temperature >=42.75) &&( temperature <=45)))
       {
           return 1;
       }
@@ -35,11 +35,33 @@ BMS_s BatteryCheck_s ={0, 0,0,0,0,0};
         return 1;  
       }
   }
+  _Bool CheckHighSOCWarningRange(float soc)
+  {
+      if((10<= soc )&&(soc<=24))
+      {
+          return 1;
+      }
+      else
+      {
+          return 0;
+      }
+      
+  }
+  _Bool CheckLowSOCWarningRange(float soc)
+  {
+      if((76<= soc)&&(soc <=80))
+          return 1;
+      }
+      else
+      {
+          return 0;
+      }
+      
+  }
 
 _Bool CheckSOCInWarningRange(float soc)
   {
-      if((10<= soc <=24) ||
-            (76<= soc <=80))
+if((checkHighSOCWarningRange(soc) == 1) ||(checkLowSOCWarningRange(soc==1))
       {
           return 1;
       }
@@ -63,7 +85,7 @@ _Bool CheckSOCInWarningRange(float soc)
   }
     _Bool CheckChargeRateInWarningRange(float chargeRate)
   {
-      if(0.76<=chargeRate <= 0.8)
+      if((0.76<=chargeRate)&&(chargeRate<= 0.8))
       {
           return 1;
       }
@@ -138,10 +160,7 @@ _Bool CheckChargeRateInRange(float chargeRate)
      {
        SOCAlerter();
      }
-     else
-     {
-
-     }
+     else{   }
   }
   
  void BatteryChargeRateIsOk(float chargeRate)
@@ -160,20 +179,19 @@ _Bool CheckChargeRateInRange(float chargeRate)
      }
   }
 
-void BatteryIsOk(float temperature, float soc, float chargeRate) 
+void BatteryIsOk(float temperature, float soc, float chargeRate,) 
 {
      BatteryTempIsOk(temperature);
      BatterySOCIsOk(soc);
      BatteryChargeRateIsOk(chargeRate);
 }
  
- 
 
 int main() {
     BatteryIsOk(25, 70, 0.7);
-    // BatteryIsOk(46, 81, 1.0);
-    // BatteryIsOk(-1, 10, 0.9);
-    // BatteryIsOk(1, 22, 0.78);
-    // BatteryIsOk(44, 77, 2.0);
+    BatteryIsOk(46, 81, 1.0);
+    BatteryIsOk(-1, 9, 0.9);
+    BatteryIsOk(1, 22, 0.78);
+    BatteryIsOk(44, 77, 0.79);
     
 }
