@@ -82,7 +82,7 @@ BMS_s BatteryCheck_s ={0, 0,0,0,0,0};
   }
 _Bool CheckSOCInWarningRange(float soc)
   {
-if((CheckHighSOCWarningRange(soc) == 1) ||(CheckLowSOCWarningRange(soc)==1))
+      if((CheckHighSOCWarningRange(soc) == 1) ||(CheckLowSOCWarningRange(soc)==1))
       {
           return 1;
       }
@@ -194,32 +194,57 @@ _Bool CheckChargeRateInRange(float chargeRate)
 
      }
   }
-void BatteryIsOk(float temperature, float soc, float chargeRate) 
+  float GetTempInFarenheit(float temperature,char tempunit)
+  {
+      float temp;
+      if(tempunit == 'C')
+      {
+          temp = ((temperature * 9/5) + 32);
+      }
+      else
+      {
+          temp = temperature;
+      }
+      return temp;
+  }
+  
+void BatteryIsOk(float temperature, float soc, float chargeRate ,char tempunit) 
 {
-     BatteryTempIsOk(temperature);
+    float temp;
+     temp = GetTempInFarenheit(temperature,tempunit);
+     BatteryTempIsOk(temp);
      BatterySOCIsOk(soc);
      BatteryChargeRateIsOk(chargeRate);
 }
  
 int main() {
-    BatteryIsOk(25, 70, 0.7);
+    BatteryIsOk(-3.8, 70, 0.7,'C');
     assert(BatteryCheck_s.TempBreachAlerter == 0);
     assert(BatteryCheck_s.SOCBreachAlerter == 0);
     assert(BatteryCheck_s.ChargeRateBreachAlerter == 0);
-    BatteryIsOk(46, 81, 1.0);
+    
+    BatteryIsOk(46, 81, 1.0,'F');
     assert(BatteryCheck_s.TempBreachAlerter == 1);
     assert(BatteryCheck_s.SOCBreachAlerter == 1);
     assert(BatteryCheck_s.ChargeRateBreachAlerter == 1);
-    BatteryIsOk(-1, 9, 0.9);
+    
+    BatteryIsOk(-1, 9, 0.9,'F');
     assert(BatteryCheck_s.TempBreachAlerter == 2);
     assert(BatteryCheck_s.SOCBreachAlerter == 2);
     assert(BatteryCheck_s.ChargeRateBreachAlerter == 2);
-    BatteryIsOk(1, 22, 0.78);
+    
+    BatteryIsOk(1, 22, 0.78,'F');
     assert(BatteryCheck_s.TempWarningAlerter == 1);
     assert(BatteryCheck_s.SOCWarningAlerter == 1);
     assert(BatteryCheck_s.ChargeRateWarningAlerter == 1);
-    BatteryIsOk(44, 77, 0.79);
+    
+    BatteryIsOk(44, 77, 0.79,'F');
     assert(BatteryCheck_s.TempWarningAlerter == 2);
     assert(BatteryCheck_s.SOCWarningAlerter == 2);
     assert(BatteryCheck_s.ChargeRateWarningAlerter == 2);
+    
+    BatteryIsOk(6.6, 77, 0.79,'C');
+    assert(BatteryCheck_s.TempWarningAlerter == 3);
+    assert(BatteryCheck_s.SOCWarningAlerter == 3);
+    assert(BatteryCheck_s.ChargeRateWarningAlerter == 3);
 }
