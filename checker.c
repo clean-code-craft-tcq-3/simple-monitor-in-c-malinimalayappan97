@@ -42,14 +42,17 @@ typedef struct
     int ChargeRateWarningAlerter;
 }BMS_s;
 
-BMS_s BatteryCheck_s;
-
-BatteryCheck_s.TempBreachAlerter = 0;
-BatteryCheck_s.SOCBreachAlerter = 0;
-BatteryCheck_s.ChargeRateBreachAlerter = 0;
-BatteryCheck_s.TempWarningAlerter = 0;
-BatteryCheck_s.SOCWarningAlerter = 0;
-BatteryCheck_s.ChargeRateWarningAlerter = 0;
+BMS_s BatteryCheck_s ={
+    Temp_NORMAL,
+    SOC_NORMAL,
+    ChargeRate_NORMAL,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+};
 
  TempRange_e CheckTempRange(float temperature)
   {
@@ -159,32 +162,44 @@ ChargeRateRange_e CheckChargeRateRange(float chargeRate)
              printf("ChargeRate out of range !\n");
          }
   }
+  void BatteryTempIsOk(float temperature)
+  {
+     if(CheckTempRange(temperature) != Temp_NORMAL)
+     {
+       TempAlerter();
+     } 
+  }
   
-
-
-void batteryIsOk(float temperature, float soc, float chargeRate) 
-{
-    if(CheckTempRange(temperature) != Temp_NORMAL)
-    {
-      TempAlerter();
-    }
-    if(CheckSocRange(soc) != SOC_NORMAL)
-    {
+  void BatterySOCIsOk(float soc)
+  {
+     if(CheckSocRange(soc) != SOC_NORMAL)
+     {
         SOCAlerter();
-    }
-    if(CheckChargeRateRange(chargeRate) != ChargeRate_NORMAL)
-    {
+     } 
+  }
+  
+  void BatteryChargeRateIsOk(float chargeRate)
+  {
+     if(CheckChargeRateRange(chargeRate) != ChargeRate_NORMAL)
+     {
         ChargeRateAlerter();
-    }
+     }
+  }
+
+
+void BatteryIsOk(float temperature, float soc, float chargeRate) 
+{
+    void BatteryTempIsOk(float temperature);
+    void BatterySOCIsOk(float soc);
+    void BatteryChargeRateIsOk(float chargeRate);
 }
  
  
 
 int main() {
-    batteryIsOk(25, 70, 0.7);
+    BatteryIsOk(25, 70, 0.7);
 
     
-    batteryIsOk(50, 85, 0);
+    BatteryIsOk(50, 85, 0);
 
 }
-
