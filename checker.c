@@ -67,8 +67,8 @@ BMS_s BatteryCheck_s ={
   }
    _Bool CheckTempInWarningRange(float temperature)
   {
-      if(((temperature <=2.25) && (temperature >=0)) ||
-            ((temperature <=45) && (temperature >=42.75)))
+      if((0<= temperature <=2.25) ||
+            (42.75<= temperature <=45))
       {
           return 0;
       }
