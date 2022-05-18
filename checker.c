@@ -78,9 +78,9 @@ BMS_s BatteryCheck_s ={
       }
   }
   
-  _Bool CheckSocInRange(float soc)
+  _Bool CheckSOCInRange(float soc)
   {
-      if(soc < 24 || soc > 76)
+      if(soc < 20 || soc > 80)
       {
           return 0;
       }
@@ -90,10 +90,33 @@ BMS_s BatteryCheck_s ={
       }
       
   }
-
+ _Bool CheckSOCInWarningRange(float temperature)
+  {
+      if(((temperature <=2.25) && (temperature >=0)) ||
+            ((temperature <=45) && (temperature >=42.75)))
+      {
+          return 0;
+      }
+      else
+      {
+        return 1;  
+      }
+  }
 _Bool CheckChargeRateInRange(float chargeRate)
   {
-      if(chargeRate > 0.76)
+      if(chargeRate > 0.8)
+      {
+          return 0;
+      }
+      else
+      {
+        return 1;  
+      }
+  }
+   _Bool CheckChargeRateInWarningRange(float temperature)
+  {
+      if(((temperature <=2.25) && (temperature >=0)) ||
+            ((temperature <=45) && (temperature >=42.75)))
       {
           return 0;
       }
@@ -112,71 +135,100 @@ _Bool CheckChargeRateInRange(float chargeRate)
      BatteryCheck_s.TempBreachAlerter++;
      printf("Temperature out of range !\n");
   }
+  void ChargeRateWarningAlerter(void)
+   {
+       BatteryCheck_s.TempWarningAlerter ++;
+       printf("Temperature nearing out of range Warning!\n");
+   }
   void SOCAlerter(void)
   {
-    if((BatteryCheck_s.SOCRange == LOW_SOC_WARNING)  ||
-         (BatteryCheck_s.SOCRange == HIGH_SOC_WARNING) )
-         {
-             BatteryCheck_s.SOCWarningAlerter ++;
-             printf("SOC nearing out of range Warning!\n");
-         }
-         else
-         {
-             BatteryCheck_s.SOCBreachAlerter++;
-             printf("SOC out of range !\n");
-         }  
+     BatteryCheck_s.TempBreachAlerter++;
+     printf("Temperature out of range !\n");
   }
-   void ChargeRateAlerter(void)
+  void SOCWarningAlerter(void)
+   {
+       BatteryCheck_s.TempWarningAlerter ++;
+       printf("Temperature nearing out of range Warning!\n");
+   }
+  void ChargeRateAlerter(void)
   {
-      if((BatteryCheck_s.ChargeRateRange == ChargeRate_WARNING))
-         {
-             BatteryCheck_s.ChargeRateWarningAlerter ++;
-             printf("ChargeRate nearing out of range Warning!\n");
-         }
-         else
-         {
-             BatteryCheck_s.ChargeRateBreachAlerter++;
-             printf("ChargeRate out of range !\n");
-         }
+     BatteryCheck_s.TempBreachAlerter++;
+     printf("Temperature out of range !\n");
   }
-  void BatteryTempIsOk(float temperature)
+ 
+  _Bool BatteryTempIsOk(float temperature)
   {
-     if(CheckTempInRange(temperature) != 1)
+      if(CheckTempInWarningRange(temperature) == 1)
      {
-       TempAlerter();
+         SOCWarningAlerter();
+         return 0;
      }
-     else if(CheckTempInWarningRange(temperature) != 1)
+     else if(CheckTempInRange(temperature) == 0)
      {
-         TempWarningAlerter();
+       SOCAlerter();
+       return 0;
      }
      else
      {
-
+        return 1; 
+     }
+     
+  }
+  
+  _Bool BatterySOCIsOk(float soc)
+  {
+     if(CheckSOCInWarningRange(soc) == 1)
+     {
+         SOCAlerter();
+         return 0;
+     }
+     else if(CheckSOCInRange(soc) == 0)
+     {
+       SOCAlerter();
+       return 0;
+     }
+     else
+     {
+        return 1; 
      }
   }
   
-  void BatterySOCIsOk(float soc)
+  _Bool BatteryChargeRateIsOk(float chargeRate)
   {
-     if(CheckSocInRange(soc) != 1)
+     if(CheckChargeRateInWarningRange(chargeRate) == 1)
      {
-        SOCAlerter();
-     } 
-  }
-  
-  void BatteryChargeRateIsOk(float chargeRate)
-  {
-     if(CheckChargeRateInRange(chargeRate) == 0)
+         ChargeRateWarningAlerter();
+         return 0;
+     }
+     else if(CheckChargeRateInRange(chargeRate) == 0)
      {
-        
+       ChargeRateAlerter();
+       return 0;
+     }
+     else
+     {
+        return 1; 
      }
   }
 
 
-void BatteryIsOk(float temperature, float soc, float chargeRate) 
+_Bool BatteryIsOk(float temperature, float soc, float chargeRate) 
 {
-    void BatteryTempIsOk(float temperature);
-    void BatterySOCIsOk(float soc);
-    void BatteryChargeRateIsOk(float chargeRate);
+    _Bool retVal;
+    
+    if( BatteryTempIsOk(temperature) == 0)
+    {
+        retVal = retVal|0;
+    }
+    if( BatterySOCIsOk(soc) == 0)
+    {
+        retVal = retVal|0;
+    }
+    if( BatteryChargeRateIsOk(chargeRate) == 0)
+    {
+        retVal = retVal|0;;
+    }
+
 }
  
  
