@@ -56,7 +56,19 @@ BMS_s BatteryCheck_s ={
 
  _Bool CheckTempInRange(float temperature)
   {
-      if(temperature < 2.25 || temperature > 42.75)
+      if(temperature < 0|| temperature > 45)
+      {
+          return 0;
+      }
+      else
+      {
+        return 1;  
+      }
+  }
+   _Bool CheckTempInWarningRange(float temperature)
+  {
+      if(((temperature <=2.25) && (temperature >=0)) ||
+            ((temperature <=45) && (temperature >=42.75)))
       {
           return 0;
       }
@@ -90,7 +102,11 @@ _Bool CheckChargeRateInRange(float chargeRate)
         return 1;  
       }
   }
-  
+   void TempWarningAlerter(void)
+   {
+       BatteryCheck_s.TempWarningAlerter ++;
+       printf("Temperature nearing out of range Warning!\n");
+   }
   void TempAlerter(void)
   {
       if((BatteryCheck_s.TempRange == LOW_Temp_WARNING)  ||
@@ -137,7 +153,11 @@ _Bool CheckChargeRateInRange(float chargeRate)
      if(CheckTempInRange(temperature) != 1)
      {
        TempAlerter();
-     } 
+     }
+     else if(CheckTempInWarningRange(temperature) != 1)
+     {
+         TempWarningAlerter();
+     }
   }
   
   void BatterySOCIsOk(float soc)
