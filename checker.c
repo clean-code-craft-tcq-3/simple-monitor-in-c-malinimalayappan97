@@ -3,8 +3,11 @@
 int TempAlerter = 0;
 int SOCAlerter = 0;
 int ChargeRateAlerter = 0;
+bool TempInRange = FALSE;
+bool SOCInRange = FALSE;
+bool ChargeRateInRange = FALSE;
 
- void CheckIfTempExceedsRange(float temperature)
+ bool isTempValueInRange(float temperature)
   {
       if(temperature < 0 || temperature > 45)
       {
@@ -13,7 +16,7 @@ int ChargeRateAlerter = 0;
       }
   }
  
-  void CheckIfSOCExceedsRange(float soc)
+  bool isSOCValueInRange(float soc)
   {
       if(soc < 20 || soc > 80)
       {
@@ -22,7 +25,7 @@ int ChargeRateAlerter = 0;
       }
   }
   
-   void CheckIfChargeRateExceedsRange(float chargeRate)
+   bool isChargeRateValueInRange(float chargeRate)
   {
       if(chargeRate > 0.8)
       {
@@ -33,9 +36,9 @@ int ChargeRateAlerter = 0;
 
 void batteryIsOk(float temperature, float soc, float chargeRate) 
 {
-    CheckIfTempExceedsRange(temperature);
-    CheckIfSOCExceedsRange(soc);
-    CheckIfChargeRateExceedsRange(chargeRate);
+    TempInRange = isTempValueInRange(temperature);
+    SOCInRange =isSOCValueInRange(soc);
+    ChargeRateInRange =isChargeRateValueInRange(chargeRate);
 }
  
  
