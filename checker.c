@@ -12,10 +12,33 @@ typedef struct
 }BMS_s;
 
 BMS_s BatteryCheck_s ={0, 0,0,0,0,0};
+  _Bool CheckHighTempWarningRange(float temperature)
+  {
+      if((42.75<= temperature )&&(temperature<=45))
+      {
+          return 1;
+      }
+      else
+      {
+          return 0;
+      }
+      
+  }
+  _Bool CheckLowTempWarningRange(float temperature)
+  {
+      if((0<= temperature)&&(temperature <=2.25))
+      {
+          return 1;
+      }
+      else
+      {
+          return 0;
+      }
+  }
+
    _Bool CheckTempInWarningRange(float temperature)
   {
-      if(((0<= temperature) &&(temperature <=2.25)) ||
-            ((temperature >=42.75) &&( temperature <=45)))
+      if((CheckHighTempWarningRange(temperature) == 1) ||(CheckLowTempWarningRange(temperature)==1))
       {
           return 1;
       }
@@ -50,18 +73,18 @@ BMS_s BatteryCheck_s ={0, 0,0,0,0,0};
   _Bool CheckLowSOCWarningRange(float soc)
   {
       if((76<= soc)&&(soc <=80))
+      {
           return 1;
       }
       else
       {
           return 0;
       }
-      
   }
 
 _Bool CheckSOCInWarningRange(float soc)
   {
-if((checkHighSOCWarningRange(soc) == 1) ||(checkLowSOCWarningRange(soc==1))
+if((CheckHighSOCWarningRange(soc) == 1) ||(CheckLowSOCWarningRange(soc)==1))
       {
           return 1;
       }
@@ -179,7 +202,7 @@ _Bool CheckChargeRateInRange(float chargeRate)
      }
   }
 
-void BatteryIsOk(float temperature, float soc, float chargeRate,) 
+void BatteryIsOk(float temperature, float soc, float chargeRate) 
 {
      BatteryTempIsOk(temperature);
      BatterySOCIsOk(soc);
